@@ -25,25 +25,22 @@ void sumMatrixPool() {
     sum_pool += s;
 }
 
-using namespace std;
-
 int main(void) {
     initMatrix();
     ThreadPool pool;
 
-  // Measure time for ThreadPool execution
-  auto start = std::chrono::high_resolution_clock::now();
-  std::function<void()> job = std::bind(&sumMatrixPool);
-  for (int i = 0; i < N; ++i) {
-    pool.enqueue(job);
-  }
-//   pool.~ThreadPool();
-  pool.wait_for_jobs();
-  auto end = std::chrono::high_resolution_clock::now();
-  auto poolTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "Allocated: " << pool.getNumThreads() << " threads!" << std::endl;
+    // Measure time for ThreadPool execution
+    auto start = std::chrono::high_resolution_clock::now();
+    std::function<void()> job = std::bind(&sumMatrixPool);
+    for (int i = 0; i < N; ++i)
+        pool.enqueue(job);
 
-  // Print results
-//   std::cout << "Sequential execution time: " << sequentialTime << " seconds" << "\nsequential ans: " << sum <<std::endl;
-  std::cout << "ThreadPool execution time: " << poolTime << " seconds" << "\npool ans: " << sum_pool <<std::endl;
-  return 0;
+    pool.wait_for_jobs();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto poolTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+    //   std::cout << "Sequential execution time: " << sequentialTime << " seconds" << "\nsequential ans: " << sum <<std::endl;
+    std::cout << "ThreadPool execution time: " << poolTime << " seconds" << "\npool ans: " << sum_pool <<std::endl;
+    return 0;
 }

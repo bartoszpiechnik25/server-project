@@ -16,6 +16,7 @@ private:
     std::vector <std::thread> threads;
     bool done;
     unsigned int busy;
+    const unsigned num_threads;
 
     void thread_loop();
 
@@ -27,4 +28,6 @@ public:
     void wait_for_jobs();
 
     void enqueue(std::function<void()> &job);
+
+    const unsigned getNumThreads() const noexcept;
 };

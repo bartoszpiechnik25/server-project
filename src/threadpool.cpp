@@ -1,7 +1,6 @@
 #include "threadpool.h"
 
-ThreadPool::ThreadPool(): done(false), busy(0) {
-    const unsigned num_threads = std::thread::hardware_concurrency();
+ThreadPool::ThreadPool(): done(false), busy(0), num_threads(std::thread::hardware_concurrency()) {
     for (auto i = 0; i < num_threads; ++i)
         threads.emplace_back(std::thread(&ThreadPool::thread_loop, this));
 }
@@ -50,4 +49,8 @@ void ThreadPool::enqueue(std::function<void()>& job) {
     ulock lock(queue_lock);
     jobs.emplace_back(job);
     new_job.notify_one();
+}
+
+const unsigned ThreadPool::getNumThreads() const noexcept {
+    return num_threads;
 }
